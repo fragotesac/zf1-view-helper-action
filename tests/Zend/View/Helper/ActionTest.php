@@ -20,20 +20,6 @@
  * @version    $Id$
  */
 
-/** Zend_View_Helper_Action */
-require_once 'Zend/View/Helper/Action.php';
-
-/** Zend_Controller_Front */
-require_once 'Zend/Controller/Front.php';
-
-/** Zend_Controller_Request_Http */
-require_once 'Zend/Controller/Request/Http.php';
-
-/** Zend_Controller_Response_Http */
-require_once 'Zend/Controller/Response/Http.php';
-
-/** Zend_View */
-require_once 'Zend/View.php';
 
 /**
  * Test class for Zend_View_Helper_Action.
@@ -202,11 +188,8 @@ class Zend_View_Helper_ActionTest extends PHPUnit\Framework\TestCase
     public function testConstructorThrowsExceptionWithNoControllerDirsInFrontController()
     {
         Zend_Controller_Front::getInstance()->resetInstance();
-        try {
-            $helper = new Zend_View_Helper_Action();
-            $this->fail('Empty front controller should cause action helper to throw exception');
-        } catch (Exception $e) {
-        }
+        $this->expectException(Exception::class);
+        $helper = new Zend_View_Helper_Action();
     }
 
     /**
@@ -221,11 +204,8 @@ class Zend_View_Helper_ActionTest extends PHPUnit\Framework\TestCase
         $response->headersSentThrowsException = false;
         $front->setResponse($response)
               ->addModuleDirectory(dirname(__FILE__) . '/_files/modules');
-        try {
-            $helper = new Zend_View_Helper_Action();
-            $this->fail('No request in front controller should cause action helper to throw exception');
-        } catch (Exception $e) {
-        }
+        $this->expectException(Exception::class);
+        $helper = new Zend_View_Helper_Action();
     }
 
     /**
@@ -239,11 +219,8 @@ class Zend_View_Helper_ActionTest extends PHPUnit\Framework\TestCase
         $request = new Zend_Controller_Request_Http('http://framework.zend.com/foo');
         $front->setRequest($this->request)
               ->addModuleDirectory(dirname(__FILE__) . '/_files/modules');
-        try {
-            $helper = new Zend_View_Helper_Action();
-            $this->fail('No response in front controller should cause action helper to throw exception');
-        } catch (Exception $e) {
-        }
+        $this->expectException(Exception::class);
+        $helper = new Zend_View_Helper_Action();
     }
 
     public function testViewObjectRemainsUnchangedAfterAction()
@@ -267,7 +244,6 @@ class Zend_View_Helper_ActionTest extends PHPUnit\Framework\TestCase
      */
     public function testActionWithPartialsUseOfViewRendererReturnsToOriginatingViewState()
     {
-        require_once 'Zend/View/Helper/Partial.php';
         $partial = new Zend_View_Helper_Partial();
         $this->view->setScriptPath(dirname(__FILE__) . '/_files/modules/default/views/scripts/');
         $partial->setView($this->view);
